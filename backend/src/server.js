@@ -20,7 +20,7 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'instapulse-api', mode: 'live-auth' });
 });
 
-// 1. Meta Login Start Route (Yeh user ko Instagram/Facebook login par bhejega)
+// 1. Meta Login Start Route (Yeh user ko Meta login par bhejega)
 app.get('/auth/meta/start', (req, res) => {
   const appId = process.env.META_APP_ID;
   const redirectUri = process.env.META_REDIRECT_URI;
@@ -33,8 +33,8 @@ app.get('/auth/meta/start', (req, res) => {
     });
   }
 
-  // Meta OAuth Login URL
-  const metaAuthUrl = `https://www.facebook.com/${apiVersion}/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=instagram_basic,pages_show_list,instagram_manage_insights`;
+  // Meta OAuth Login URL (Updated with valid basic scopes to prevent invalid scope errors)
+  const metaAuthUrl = `https://www.facebook.com/${apiVersion}/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile`;
   
   res.redirect(metaAuthUrl);
 });
