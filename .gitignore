@@ -1,0 +1,6 @@
+# Local secrets and dependencies
+backend/.env
+backend/node_modules/
+android/.gradle/
+android/**/build/
+.DS_Store
