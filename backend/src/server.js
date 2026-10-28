@@ -20,7 +20,7 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'instapulse-api', mode: 'live-auth' });
 });
 
-// 1. Meta Login Start Route (Yeh user ko Meta login par bhejega)
+// 1. Meta Login Start Route
 app.get('/auth/meta/start', (req, res) => {
   const appId = process.env.META_APP_ID;
   const redirectUri = process.env.META_REDIRECT_URI;
@@ -33,13 +33,13 @@ app.get('/auth/meta/start', (req, res) => {
     });
   }
 
-  // Meta OAuth Login URL (Updated with valid basic scopes to prevent invalid scope errors)
-  const metaAuthUrl = `https://www.facebook.com/${apiVersion}/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile`;
+  // Meta OAuth Login URL without custom scopes to prevent any permission errors
+  const metaAuthUrl = `https://www.facebook.com/${apiVersion}/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}`;
   
   res.redirect(metaAuthUrl);
 });
 
-// 2. Meta Login Callback Route (Login hone ke baad Meta yahan wapas aayega)
+// 2. Meta Login Callback Route
 app.get('/auth/meta/callback', async (req, res) => {
   const { code } = req.query;
 
