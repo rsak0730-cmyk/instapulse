@@ -1,15 +1,19 @@
-name: Deploy InstaPulse website
+name: Deploy InstaPulse Website
+
 on:
   push:
-    branches: [main, master]
+    branches: [ "main" ]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: true
+
 jobs:
   deploy:
     environment:
@@ -19,17 +23,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Configure Pages
+
+      - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Prepare site
-        run: |
-          mkdir -p _site
-          cp index.html _site/
-          cp -R assets _site/assets
+        with:
+          enablement: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
