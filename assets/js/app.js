@@ -1,10 +1,10 @@
 const posts=[
-  {title:'A little behind the scenes  ',format:'Reel',reach:28400,likes:2180,comments:184,saves:412,engagement:'9.8%',emoji:' ',theme:'',date:'Oct 25'},
-  {title:'3 things I wish I knew sooner',format:'Carousel',reach:19200,likes:1420,comments:97,saves:683,engagement:'8.1%',emoji:' ',theme:'t2',date:'Oct 22'},
-  {title:'Sunday mood  ',format:'Image',reach:11700,likes:980,comments:63,saves:109,engagement:'6.4%',emoji:' ',theme:'t3',date:'Oct 19'},
-  {title:'Come create with me',format:'Reel',reach:24300,likes:1940,comments:201,saves:508,engagement:'10.2%',emoji:' ',theme:'',date:'Oct 16'},
-  {title:'Your weekly reminder',format:'Carousel',reach:14500,likes:1010,comments:88,saves:352,engagement:'7.3%',emoji:' ',theme:'t2',date:'Oct 12'},
-  {title:'Golden hour details',format:'Image',reach:8900,likes:710,comments:42,saves:81,engagement:'5.9%',emoji:' ',theme:'t3',date:'Oct 08'}
+  {title:'A little behind the scenes 🎬',format:'Reel',reach:28400,likes:2180,comments:184,saves:412,engagement:'9.8%',emoji:'🎥',theme:'',date:'Oct 25'},
+  {title:'3 things I wish I knew sooner',format:'Carousel',reach:19200,likes:1420,comments:97,saves:683,engagement:'8.1%',emoji:'📑',theme:'t2',date:'Oct 22'},
+  {title:'Sunday mood ✨',format:'Image',reach:11700,likes:980,comments:63,saves:109,engagement:'6.4%',emoji:'📸',theme:'t3',date:'Oct 19'},
+  {title:'Come create with me',format:'Reel',reach:24300,likes:1940,comments:201,saves:508,engagement:'10.2%',emoji:'🎥',theme:'',date:'Oct 16'},
+  {title:'Your weekly reminder',format:'Carousel',reach:14500,likes:1010,comments:88,saves:352,engagement:'7.3%',emoji:'📑',theme:'t2',date:'Oct 12'},
+  {title:'Golden hour details',format:'Image',reach:8900,likes:710,comments:42,saves:81,engagement:'5.9%',emoji:'📸',theme:'t3',date:'Oct 08'}
 ];
 
 const pages=['overview','content','audience','insights','connect','settings'];
@@ -27,7 +27,7 @@ function navigate(page){
   document.getElementById('page-'+page).classList.add('active-page');
   document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
   document.getElementById('crumb').textContent=labels[page];
-  document.title=labels[page]+'   InstaPulse';
+  document.title=labels[page]+' - InstaPulse';
   document.getElementById('sidebar').classList.remove('open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -44,7 +44,7 @@ window.addEventListener('hashchange',()=>navigate(location.hash.slice(1)||'overv
 function renderPosts(){
   const top=document.getElementById('topPosts');
   if(top){
-    top.innerHTML=posts.slice(0,3).map(p=>`<div class="post-row"><div class="post-thumb ${p.theme}">${p.emoji}</div><div class="post-info"><strong>${p.title}</strong><small>${p.format}   ${p.date}</small></div><div class="post-stats">${compact(p.reach)}<small>reach</small></div></div>`).join('');
+    top.innerHTML=posts.slice(0,3).map(p=>`<div class="post-row"><div class="post-thumb ${p.theme}">${p.emoji}</div><div class="post-info"><strong>${p.title}</strong><small>${p.format} • ${p.date}</small></div><div class="post-stats">${compact(p.reach)}<small>reach</small></div></div>`).join('');
   }
   renderContent();
 }
@@ -70,7 +70,7 @@ function renderHeatmap(){
     for(let c=0;c<7;c++){
       const cell=document.createElement('span');
       cell.className='heat-cell '+(vals[r*7+c]?'l'+vals[r*7+c]:'');
-      cell.title=labels[r]+'   '+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c]+' (sample activity)';
+      cell.title=labels[r]+' • '+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c]+' (sample activity)';
       heat.appendChild(cell);
     }
   }
@@ -116,7 +116,7 @@ if(setupInfoBtn){
   setupInfoBtn.addEventListener('click',()=>{
     const el=document.getElementById('setupChecklist');
     el.classList.toggle('hidden');
-    setupInfoBtn.innerHTML=el.classList.contains('hidden')?'Show setup checklist <span> </span>':'Hide setup checklist  ';
+    setupInfoBtn.innerHTML=el.classList.contains('hidden')?'Show setup checklist <span>↓</span>':'Hide setup checklist ↑';
   });
 }
 
@@ -172,18 +172,13 @@ if(resetBtn){
   });
 }
 
-// --- Instagram Login Redirect Trigger ---
-function redirectToMetaLogin() {
-  const backendLoginUrl = "https://instapulse-backend.onrender.com/auth/meta/start";
-  window.location.href = backendLoginUrl;
-}
-
+// --- Instagram Login Trigger ---
 document.addEventListener('DOMContentLoaded', () => {
-  const connectPageBtn = document.querySelector('#page-connect .primary-btn');
-  if (connectPageBtn) {
-    connectPageBtn.addEventListener('click', (e) => {
+  const metaLoginBtn = document.getElementById('metaLoginBtn');
+  if (metaLoginBtn) {
+    metaLoginBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      redirectToMetaLogin();
+      window.location.href = "https://instapulse-backend.onrender.com/auth/meta/start";
     });
   }
 });
