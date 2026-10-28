@@ -15,6 +15,7 @@ function compact(n){return n>=1000?(n/1000).toFixed(1)+'K':String(n)}
 
 function showToast(msg){
   const t=document.getElementById('toast');
+  if(!t)return;
   t.textContent=msg;
   t.classList.add('show');
   clearTimeout(window.toastTimer);
@@ -24,11 +25,14 @@ function showToast(msg){
 function navigate(page){
   if(!pages.includes(page))page='overview';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active-page'));
-  document.getElementById('page-'+page).classList.add('active-page');
+  const targetPage = document.getElementById('page-'+page);
+  if(targetPage) targetPage.classList.add('active-page');
   document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
-  document.getElementById('crumb').textContent=labels[page];
+  const crumb = document.getElementById('crumb');
+  if(crumb) crumb.textContent=labels[page];
   document.title=labels[page]+' - InstaPulse';
-  document.getElementById('sidebar').classList.remove('open');
+  const sidebar = document.getElementById('sidebar');
+  if(sidebar) sidebar.classList.remove('open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -60,17 +64,17 @@ function renderHeatmap(){
   const heat=document.getElementById('heatmap');
   if(!heat)return;
   const vals=[1,1,2,3,2,1,1,1,2,3,4,3,2,1,1,2,3,3,4,3,2,1,1,2,3,4,4,3,2,1,1,2,3,4,4,3,2,1,1,1,2,3,3,2,1,1];
-  const labels=['6 AM','9 AM','12 PM','3 PM','6 PM','9 PM'];
+  const timeLabels=['6 AM','9 AM','12 PM','3 PM','6 PM','9 PM'];
   heat.innerHTML='';
   for(let r=0;r<6;r++){
     const label=document.createElement('span');
     label.className='hour-label';
-    label.textContent=labels[r];
+    label.textContent=timeLabels[r];
     heat.appendChild(label);
     for(let c=0;c<7;c++){
       const cell=document.createElement('span');
       cell.className='heat-cell '+(vals[r*7+c]?'l'+vals[r*7+c]:'');
-      cell.title=labels[r]+' • '+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c]+' (sample activity)';
+      cell.title=timeLabels[r]+' • '+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][c]+' (sample activity)';
       heat.appendChild(cell);
     }
   }
@@ -81,11 +85,22 @@ function updatePeriod(){
   if(!selectElem) return;
   const days=Number(selectElem.value);
   const mult=days===7?.27:days===90?2.8:1;
-  document.getElementById('reachValue').textContent=compact(Math.round(84200*mult));
-  document.getElementById('engagementValue').innerHTML=(5.84*(days===7?1.04:days===90?.94:1)).toFixed(2)+'<span class="unit">%</span>';
-  document.getElementById('followersValue').textContent=fmt(Math.round(12480*(days===7?.99:days===90?1.17:1)));
-  document.getElementById('interactionsValue').textContent=fmt(Math.round(6391*(days===7?.25:days===90?2.6:1)));
-  document.getElementById('todayLabel').textContent=days===7?'Last 7 days':days===90?'Last 90 days':'Last 30 days';
+  
+  const reachVal = document.getElementById('reachValue');
+  if(reachVal) reachVal.textContent=compact(Math.round(84200*mult));
+  
+  const engVal = document.getElementById('engagementValue');
+  if(engVal) engVal.innerHTML=(5.84*(days===7?1.04:days===90?.94:1)).toFixed(2)+'<span class="unit">%</span>';
+  
+  const folVal = document.getElementById('followersValue');
+  if(folVal) folVal.textContent=fmt(Math.round(12480*(days===7?.99:days===90?1.17:1)));
+  
+  const intVal = document.getElementById('interactionsValue');
+  if(intVal) intVal.textContent=fmt(Math.round(6391*(days===7?.25:days===90?2.6:1)));
+  
+  const todayLbl = document.getElementById('todayLabel');
+  if(todayLbl) todayLbl.textContent=days===7?'Last 7 days':days===90?'Last 90 days':'Last 30 days';
+  
   showToast('Showing illustrative '+days+'-day sample metrics.');
 }
 
@@ -101,7 +116,10 @@ if(menuBtn) menuBtn.addEventListener('click',()=>document.getElementById('sideba
 const helpBtn = document.getElementById('helpBtn');
 if(helpBtn) helpBtn.addEventListener('click',()=>document.getElementById('helpModal').classList.remove('hidden'));
 
-function closeModal(){document.getElementById('helpModal').classList.add('hidden')}
+function closeModal(){
+  const helpModal = document.getElementById('helpModal');
+  if(helpModal) helpModal.classList.add('hidden');
+}
 const closeModalBtn = document.getElementById('closeModal');
 if(closeModalBtn) closeModalBtn.addEventListener('click',closeModal);
 
@@ -115,6 +133,7 @@ const setupInfoBtn = document.getElementById('setupInfoBtn');
 if(setupInfoBtn){
   setupInfoBtn.addEventListener('click',()=>{
     const el=document.getElementById('setupChecklist');
+    if(!el) return;
     el.classList.toggle('hidden');
     setupInfoBtn.innerHTML=el.classList.contains('hidden')?'Show setup checklist <span>↓</span>':'Hide setup checklist ↑';
   });
