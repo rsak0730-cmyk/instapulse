@@ -30,6 +30,9 @@ jobs:
       - name: Build debug APK
         run: |
           cd android
+          # Generate the missing gradlew wrapper file
+          gradle wrapper
+          # Make it executable and build
           chmod +x gradlew
           ./gradlew assembleDebug
 
